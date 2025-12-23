@@ -61,3 +61,4 @@ resource "aws_instance" "example" {
     Name = "BYOD3-Example-Instance"
   }
 }
+}
