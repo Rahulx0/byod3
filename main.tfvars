@@ -1,2 +1,2 @@
-instance_type = "t2.small"
+instance_type = "t3.micro"
 region = "us-east-1"
