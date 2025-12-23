@@ -3,9 +3,8 @@ pipeline {
     environment {
         TF_IN_AUTOMATION = 'true'
         TF_CLI_ARGS = '-no-color'
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        SSH_CRED_ID = credentials('SSH_CRED_ID')
+        TF_CLI_CONFIG_FILE = credentials('badf87b5-c81c-440d-87b5-1698b311dcdd')
+        SSH_CRED_ID = credentials('privatekey')
     }
     stages {
         stage('Terraform Init') {
