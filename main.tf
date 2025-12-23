@@ -11,6 +11,16 @@ provider "aws" {
   region = var.region
 }
 
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+}
+
 resource "aws_vpc" "example" {
   cidr_block = "10.0.0.0/16"
 
@@ -52,7 +62,7 @@ resource "aws_security_group" "example" {
 }
 
 resource "aws_instance" "example" {
-  ami                    = "ami-068c0051b15cdb816" 
+  ami                    = data.aws_ami.amazon_linux.id
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.example.id
   vpc_security_group_ids = [aws_security_group.example.id]
@@ -60,5 +70,4 @@ resource "aws_instance" "example" {
   tags = {
     Name = "BYOD3-Example-Instance"
   }
-}
 }
