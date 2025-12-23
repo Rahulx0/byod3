@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Terraform Init') {
             steps {
-                sh 'terraform init'
+                sh 'terraform init --reconfigure'
                 sh "echo '--- ${env.BRANCH_NAME}.tfvars contents ---'"
                 sh "cat ${env.BRANCH_NAME}.tfvars || echo 'No tfvars file for branch ${env.BRANCH_NAME}'"
             }
