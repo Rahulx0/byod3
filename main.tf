@@ -16,6 +16,6 @@ resource "aws_instance" "example" {
   instance_type = var.instance_type
 
   tags = {
-    Name = "BYOD3-Example-Instance"
+    Name = "BYOD3-Instance"
   }
 }
