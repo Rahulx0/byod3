@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "example" {
-  ami           = "ami-068c0051b15cdb816"  # Replace with a valid AMI ID for your region (e.g., Amazon Linux 2)
+  ami           = "ami-068c0051b15cdb816"  
   instance_type = var.instance_type
 
   tags = {
