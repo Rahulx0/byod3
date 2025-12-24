@@ -1,7 +1,8 @@
 ---
 - hosts: splunk
-  become: yes
-  tasks:
+  become: true
+  tasks:    - name: Gather EC2 instance facts
+      ec2_metadata_facts:
     - name: Update system
       yum:
         name: '*'
@@ -14,7 +15,7 @@
 
     - name: Download Splunk RPM
       get_url:
-        url: https://download.splunk.com/products/splunk/releases/9.1.1/linux/splunk-9.1.1-64e843ea36b1-linux-2.6-x86_64.rpm
+        url: https://download.splunk.com/products/splunk/releases/9.3.1/linux/splunk-9.3.1-8aa3e4a6b8c2-linux-2.6-x86_64.rpm
         dest: /tmp/splunk.rpm
 
     - name: Install Splunk
@@ -28,4 +29,4 @@
     - name: Start Splunk service
       command: /opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt
       become_user: splunk
-      ignore_errors: yes  # In case it's already started
+      ignore_errors: true  # In case it's already started
