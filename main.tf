@@ -8,16 +8,21 @@ terraform {
 }
 
 provider "aws" {
-  region = var.region
+  region = "us-east-1"
 }
 
-data "aws_ami" "amazon_linux" {
+data "aws_ami" "ubuntu" {
   most_recent = true
-  owners      = ["amazon"]
+  owners      = ["099720109477"] # Canonical
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
   }
 }
 
@@ -104,11 +109,20 @@ resource "aws_security_group" "example" {
 }
 
 resource "aws_instance" "example" {
-  ami                    = data.aws_ami.amazon_linux.id
+  ami                    = data.aws_ami.ubuntu.id
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.example.id
   vpc_security_group_ids = [aws_security_group.example.id]
   key_name               = "kratos"
+
+  user_data = <<-EOF
+              #!/bin/bash
+              set -e
+              exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+              apt-get update -y
+              DEBIAN_FRONTEND=noninteractive apt-get install -y wget
+              echo "Instance ready: Ubuntu $(lsb_release -ds 2>/dev/null || uname -a)" > /etc/motd
+  EOF
 
   tags = {
     Name = "BYOD3-Example-Instance"
