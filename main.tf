@@ -108,6 +108,7 @@ resource "aws_instance" "example" {
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.example.id
   vpc_security_group_ids = [aws_security_group.example.id]
+  key_name               = "kratos"
 
   tags = {
     Name = "BYOD3-Example-Instance"

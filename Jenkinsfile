@@ -51,7 +51,7 @@ pipeline {
         }
         stage('Splunk Installation ') {
             steps {
-                ansiblePlaybook playbook: 'playbooks/splunk.yml', inventory: 'dynamic_inventory.ini', credentialsId: 'privatekey', hostKeyChecking: false
+                     ansiblePlaybook playbook: 'playbooks/splunk.yml', inventory: 'dynamic_inventory.ini', credentialsId: 'privatekey', hostKeyChecking: false
             }
         }
         stage('Splunk Testing') {
