@@ -74,9 +74,19 @@ pipeline {
             sh 'rm -f dynamic_inventory.ini'
         }
         failure {
+            script {
+                if (env.BRANCH_NAME == 'dev') {
+                    input message: 'Confirm destroy after failure?'
+                }
+            }
             sh "terraform destroy -var-file=${env.BRANCH_NAME}.tfvars -auto-approve"
         }
         aborted {
+            script {
+                if (env.BRANCH_NAME == 'dev') {
+                    input message: 'Confirm destroy after abort?'
+                }
+            }
             sh "terraform destroy -var-file=${env.BRANCH_NAME}.tfvars -auto-approve"
         }
     }

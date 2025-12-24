@@ -1,8 +1,10 @@
 ---
 - hosts: splunk
-  become: true
-  tasks:    - name: Gather EC2 instance facts
+  become: yes
+  tasks:
+    - name: Gather EC2 instance facts
       ec2_metadata_facts:
+
     - name: Update system
       yum:
         name: '*'
