@@ -8,11 +8,15 @@
     splunk_password: ""  # Set your Splunk download password (if needed)
   tasks:
     - name: Bootstrap Python (install python3) using raw
+      become: false
       raw: |
+        set -e
         if command -v yum >/dev/null 2>&1; then
-          yum install -y python3
+          # try passwordless sudo first (-n); fall back to direct install to fail fast without prompting
+          sudo -n yum install -y python3 || yum install -y python3 || true
         elif command -v apt-get >/dev/null 2>&1; then
-          apt-get update && apt-get install -y python3
+          sudo -n apt-get update || true
+          sudo -n apt-get install -y python3 || apt-get update && apt-get install -y python3 || true
         fi
       args:
         warn: false
