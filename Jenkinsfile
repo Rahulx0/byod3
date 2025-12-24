@@ -6,6 +6,7 @@ pipeline {
         TF_CLI_CONFIG_FILE = credentials('badf87b5-c81c-440d-87b5-1698b311dcdd')
         SSH_CRED_ID = credentials('privatekey')
         AWS_DEFAULT_REGION = 'us-east-1'
+        LANG = 'en_US.UTF-8'
     }
     stages {
         stage('Terraform Init') {
@@ -50,12 +51,12 @@ pipeline {
         }
         stage('Splunk Installation ') {
             steps {
-                ansiblePlaybook playbook: 'playbooks/splunk.yml', inventory: 'dynamic_inventory.ini', credentialsId: 'privatekey'
+                ansiblePlaybook playbook: 'playbooks/splunk.yml', inventory: 'dynamic_inventory.ini', credentialsId: 'privatekey', user: 'ec2-user'
             }
         }
         stage('Splunk Testing') {
             steps {
-                ansiblePlaybook playbook: 'playbooks/test-splunk.yml', inventory: 'dynamic_inventory.ini', credentialsId: 'privatekey'
+                ansiblePlaybook playbook: 'playbooks/test-splunk.yml', inventory: 'dynamic_inventory.ini', credentialsId: 'privatekey', user: 'ec2-user'
             }
         }
         stage('Destroy') {
