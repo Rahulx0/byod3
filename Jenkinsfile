@@ -21,11 +21,12 @@ pipeline {
             }
         }
         stage('Provisioning') {
-            when {
-                branch 'dev'
-            }
             steps {
-                input message: 'Manual approval required to apply changes. Proceed?'
+                script {
+                    if (env.BRANCH_NAME == 'dev') {
+                        input message: 'Manual approval required to apply changes. Proceed?'
+                    }
+                }
                 sh "terraform apply -var-file=${env.BRANCH_NAME}.tfvars -auto-approve"
                 script {
                     def ip = sh(script: 'terraform output -raw instance_public_ip', returnStdout: true).trim()
