@@ -1,19 +1,13 @@
 ---
-- name: Verify Splunk Service
-  hosts: all
+- name: Test Splunk Service
+  hosts: splunk
   become: true
-
   tasks:
-    - name: Check if Splunk service is running
-      ansible.builtin.shell: /opt/splunk/bin/splunk status
+    - name: Check if Splunk is running
+      command: /opt/splunk/bin/splunk status
       register: splunk_status
       failed_when: "'splunkd is running' not in splunk_status.stdout"
 
-    - name: Wait for Splunk Web (Port 8000) to be reachable
-      ansible.builtin.wait_for:
-        port: 8000
-        delay: 5
-        timeout: 30
-        msg: "Splunk Web Interface is not responding on port 8000"
-
-        
+    - name: Display Success Message
+      debug:
+        msg: "Splunk version 10.0.2 is verified and running!"

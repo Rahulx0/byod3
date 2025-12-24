@@ -1,34 +1,25 @@
 ---
-- name: Install and Configure Splunk on Ubuntu
-  hosts: all
+- name: Install and Start Splunk
+  hosts: splunk
   become: true
-  vars:
-    splunk_url: "https://download.splunk.com/products/splunk/releases/10.0.2/linux/splunk-10.0.2-e2d18b4767e9-linux-amd64.deb"
-    splunk_deb: "/tmp/splunk.deb"
-
   tasks:
     - name: Update apt cache
       apt:
         update_cache: yes
 
-    - name: Download Splunk .deb package
-      get_url:
-        url: "{{ splunk_url }}"
-        dest: "{{ splunk_deb }}"
-        mode: '0644'
+    - name: Remove old package if exists
+      file:
+        path: /tmp/splunk.deb
+        state: absent
+
+    - name: Download Splunk Enterprise 10.0.2
+      shell: 'wget -O /tmp/splunk.deb "https://download.splunk.com/products/splunk/releases/10.0.2/linux/splunk-10.0.2-e2d18b4767e9-linux-amd64.deb"'
 
     - name: Install Splunk package
       apt:
-        deb: "{{ splunk_deb }}"
-        state: present
+        deb: "/tmp/splunk.deb"
 
-    - name: Accept license and start Splunk
-      # Splunk requires a one-time license acceptance
-      command: "/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt"
+    - name: Accept License and Start Splunk
+      command: /opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt --seed-passwd changeme123
       args:
-        creates: /opt/splunk/etc/splunk.ready  # Prevents re-running if already configured
-
-    - name: Enable Splunk to start on boot
-      command: "/opt/splunk/bin/splunk enable boot-start"
-      args:
-        creates: /etc/systemd/system/splunk.service
+        creates: /opt/splunk/etc/splunk.secret
