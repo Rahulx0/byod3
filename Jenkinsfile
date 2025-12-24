@@ -33,7 +33,7 @@ pipeline {
                     def ip = sh(script: 'terraform output -raw instance_public_ip', returnStdout: true).trim()
                     def id = sh(script: 'terraform output -raw instance_id', returnStdout: true).trim()
                     if (!ip || !id) {
-                        error("Failed to capture Terraform outputs. Check Terraform apply logs.")
+                        error("Failed to capture Terraform outputs . Check Terraform apply logs.")
                     }
                     env.INSTANCE_IP = ip
                     env.INSTANCE_ID = id
