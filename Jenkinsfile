@@ -47,8 +47,8 @@ pipeline {
  //       stage('AWS Health Check') {
    //         steps {
    //             sh "aws ec2 wait instance-status-ok --instance-ids ${env.INSTANCE_ID}"
-            }
-        }
+   //         }
+   //       }
         stage('Splunk Installation ') {
             steps {
                      ansiblePlaybook playbook: 'playbooks/splunk.yml', inventory: 'dynamic_inventory.ini', credentialsId: 'privatekey', hostKeyChecking: false
