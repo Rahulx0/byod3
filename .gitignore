@@ -10,6 +10,11 @@
 # Jenkins / Pipeline generated
 dynamic_inventory.ini
 
+# SSH Keys
+kratos
+kratos.pub
+*.pem
+
 # General
 .DS_Store
 *.log

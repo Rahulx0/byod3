@@ -4,7 +4,7 @@ pipeline {
         TF_IN_AUTOMATION = 'true'
         TF_CLI_ARGS = '-no-color'
         TF_CLI_CONFIG_FILE = credentials('badf87b5-c81c-440d-87b5-1698b311dcdd')
-        SSH_CRED_ID = credentials('3866db3c-dbfd-4a3a-884d-177d79c841d6')
+        SSH_CRED_ID = credentials('privatekey')
         AWS_DEFAULT_REGION = 'us-east-1'
         LANG = 'en_US.UTF-8'
     }
