@@ -1,0 +1,22 @@
+---
+- hosts: splunk
+  tasks:
+    - name: Check Splunk status
+      command: /opt/splunk/bin/splunk status
+      register: splunk_status
+      ignore_errors: yes
+
+    - name: Display Splunk status
+      debug:
+        msg: "Splunk Status: {{ splunk_status.stdout }}"
+
+    - name: Check if Splunk web is accessible
+      uri:
+        url: http://localhost:8000
+        method: GET
+      register: web_check
+      ignore_errors: yes
+
+    - name: Display web check
+      debug:
+        msg: "Splunk Web Check: {{ web_check.status }}"

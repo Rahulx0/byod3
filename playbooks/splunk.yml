@@ -1,0 +1,31 @@
+---
+- hosts: splunk
+  become: yes
+  tasks:
+    - name: Update system
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Install wget
+      yum:
+        name: wget
+        state: present
+
+    - name: Download Splunk RPM
+      get_url:
+        url: https://download.splunk.com/products/splunk/releases/9.1.1/linux/splunk-9.1.1-64e843ea36b1-linux-2.6-x86_64.rpm
+        dest: /tmp/splunk.rpm
+
+    - name: Install Splunk
+      yum:
+        name: /tmp/splunk.rpm
+        state: present
+
+    - name: Enable Splunk to start on boot
+      command: /opt/splunk/bin/splunk enable boot-start -user splunk
+
+    - name: Start Splunk service
+      command: /opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt
+      become_user: splunk
+      ignore_errors: yes  # In case it's already started
