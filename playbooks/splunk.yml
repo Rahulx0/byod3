@@ -1,11 +1,35 @@
 ---
 - hosts: splunk
   become: true
+  gather_facts: false
   vars:
     splunk_rpm_url: "https://download.splunk.com/products/splunk/releases/10.0.2/linux/splunk-10.0.2-e2d18b4767e9.x86_64.rpm"
     splunk_username: ""  # Set your Splunk download username (if needed)
     splunk_password: ""  # Set your Splunk download password (if needed)
   tasks:
+    - name: Bootstrap Python (install python3) using raw
+      raw: |
+        if command -v yum >/dev/null 2>&1; then
+          yum install -y python3
+        elif command -v apt-get >/dev/null 2>&1; then
+          apt-get update && apt-get install -y python3
+        fi
+      args:
+        warn: false
+
+    - name: Wait for Python 3 to be present
+      wait_for:
+        path: /usr/bin/python3
+        state: present
+        timeout: 120
+
+    - name: Set Python interpreter to python3 for this host
+      set_fact:
+        ansible_python_interpreter: /usr/bin/python3
+
+    - name: Gather facts (after Python bootstrap)
+      ansible.builtin.setup:
+
     - name: Gather EC2 instance facts
       ec2_metadata_facts:
 
