@@ -40,7 +40,7 @@ pipeline {
                 }
                 sh """
                 echo '[splunk]' > dynamic_inventory.ini
-                echo '${env.INSTANCE_IP} ansible_user=ec2-user' >> dynamic_inventory.ini
+                echo '${env.INSTANCE_IP} ansible_user=ubuntu' >> dynamic_inventory.ini
                 """
             }
         }
@@ -52,12 +52,12 @@ pipeline {
         // }
         stage('Splunk Installation ') {
             steps {
-                     ansiblePlaybook playbook: 'playbooks/splunk.yml', inventory: 'inventory/aws_ec2.yml', become: true, credentialsId: 'privatekey', hostKeyChecking: false
+                     ansiblePlaybook playbook: 'playbooks/splunk.yml', inventory: 'inventory/aws_ec2.yml', become: true, credentialsId: 'privatekey', hostKeyChecking: false, extraVars: [ansible_user: 'ubuntu']
             }
         }
         stage('Splunk Testing') {
             steps {
-                ansiblePlaybook playbook: 'playbooks/test-splunk.yml', inventory: 'dynamic_inventory.ini', credentialsId: 'privatekey', hostKeyChecking: false
+                ansiblePlaybook playbook: 'playbooks/test-splunk.yml', inventory: 'dynamic_inventory.ini', credentialsId: 'privatekey', hostKeyChecking: false, extraVars: [ansible_user: 'ubuntu']
             }
         }
         stage('Destroy') {
