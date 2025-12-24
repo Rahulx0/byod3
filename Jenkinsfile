@@ -52,7 +52,7 @@ pipeline {
         // }
         stage('Splunk Installation ') {
             steps {
-                     ansiblePlaybook playbook: 'playbooks/splunk.yml', inventory: 'inventory/aws_ec2.yml', become: true, credentialsId: 'privatekey', hostKeyChecking: false, extraVars: [ansible_user: 'ubuntu']
+                     ansiblePlaybook playbook: 'playbooks/splunk.yml', inventory: 'dynamic_inventory.ini', become: true, credentialsId: 'privatekey', hostKeyChecking: false, extraVars: [ansible_user: 'ubuntu']
             }
         }
         stage('Splunk Testing') {
