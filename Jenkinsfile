@@ -5,6 +5,7 @@ pipeline {
         TF_CLI_ARGS = '-no-color'
         TF_CLI_CONFIG_FILE = credentials('badf87b5-c81c-440d-87b5-1698b311dcdd')
         SSH_CRED_ID = credentials('privatekey')
+        AWS_DEFAULT_REGION = 'us-east-1'
     }
     stages {
         stage('Terraform Init') {
@@ -27,8 +28,13 @@ pipeline {
                 input message: 'Manual approval required to apply changes. Proceed?'
                 sh "terraform apply -var-file=${env.BRANCH_NAME}.tfvars -auto-approve"
                 script {
-                    env.INSTANCE_IP = sh(script: 'terraform output -raw instance_public_ip', returnStdout: true).trim()
-                    env.INSTANCE_ID = sh(script: 'terraform output -raw instance_id', returnStdout: true).trim()
+                    def ip = sh(script: 'terraform output -raw instance_public_ip', returnStdout: true).trim()
+                    def id = sh(script: 'terraform output -raw instance_id', returnStdout: true).trim()
+                    if (!ip || !id) {
+                        error("Failed to capture Terraform outputs. Check Terraform apply logs.")
+                    }
+                    env.INSTANCE_IP = ip
+                    env.INSTANCE_ID = id
                 }
                 sh """
                 echo '[splunk]' > dynamic_inventory.ini
