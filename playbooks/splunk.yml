@@ -3,6 +3,7 @@
   hosts: all
   become: true
   vars:
+    splunk_url: "https://download.splunk.com/products/splunk/releases/10.0.2/linux/splunk-10.0.2-e2d18b4767e9-linux-amd64.deb"
     splunk_deb: "/tmp/splunk.deb"
 
   tasks:
@@ -10,9 +11,9 @@
       apt:
         update_cache: yes
 
-    - name: Copy Splunk .deb package
-      copy:
-        src: splunk.deb
+    - name: Download Splunk .deb package
+      get_url:
+        url: "{{ splunk_url }}"
         dest: "{{ splunk_deb }}"
         mode: '0644'
 
