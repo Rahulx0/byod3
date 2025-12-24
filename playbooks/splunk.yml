@@ -1,6 +1,10 @@
 ---
 - hosts: splunk
-  become: yes
+  become: true
+  vars:
+    splunk_rpm_url: "https://download.splunk.com/products/splunk/releases/10.0.2/linux/splunk-10.0.2-e2d18b4767e9.x86_64.rpm"
+    splunk_username: ""  # Set your Splunk download username (if needed)
+    splunk_password: ""  # Set your Splunk download password (if needed)
   tasks:
     - name: Gather EC2 instance facts
       ec2_metadata_facts:
@@ -17,8 +21,10 @@
 
     - name: Download Splunk RPM
       get_url:
-        url: https://download.splunk.com/products/splunk/releases/9.3.1/linux/splunk-9.3.1-8aa3e4a6b8c2-linux-2.6-x86_64.rpm
+        url: "{{ splunk_rpm_url }}"
         dest: /tmp/splunk.rpm
+        username: "{{ splunk_username }}"
+        password: "{{ splunk_password }}"
 
     - name: Install Splunk
       yum:
